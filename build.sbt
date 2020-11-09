@@ -26,6 +26,13 @@ lazy val extension = (project in file("extension"))
     name := "akka-monitoring-extension",
     libraryDependencies ++= akka ++ openTelemetryApi
   )
+  .dependsOn(openTelemetryCore)
+
+lazy val openTelemetryCore = (project in file("opentelemetry-core"))
+  .settings(
+    name := "opentelemetry-core",
+    libraryDependencies ++= openTelemetryApi
+  )
 
 val assemblyMergeStrategySettings = assembly / assemblyMergeStrategy := {
   case PathList("META-INF", "services", _ @_*)                      => MergeStrategy.concat
@@ -58,6 +65,7 @@ lazy val agent = (project in file("agent"))
     assemblyMergeStrategySettings,
     Test / fork := true
   )
+  .dependsOn(openTelemetryCore)
 
 lazy val testApp = (project in file("test_app"))
   .settings(
