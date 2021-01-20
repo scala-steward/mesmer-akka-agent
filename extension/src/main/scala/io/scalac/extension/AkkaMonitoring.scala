@@ -2,28 +2,25 @@ package io.scalac.extension
 
 import akka.actor.ExtendedActorSystem
 import akka.actor.typed.scaladsl.Behaviors
-import akka.actor.typed.{ ActorSystem, Extension, ExtensionId, SupervisorStrategy }
+import akka.actor.typed.{ActorSystem, Extension, ExtensionId, SupervisorStrategy}
 import akka.cluster.Cluster
-import akka.cluster.typed.{ ClusterSingleton, SingletonActor }
+import akka.cluster.typed.{ClusterSingleton, SingletonActor}
 import akka.util.Timeout
 import com.newrelic.telemetry.Attributes
 import com.newrelic.telemetry.opentelemetry.`export`.NewRelicMetricExporter
 import io.opentelemetry.sdk.OpenTelemetrySdk
 import io.opentelemetry.sdk.metrics.`export`.IntervalMetricReader
-import io.scalac.core.model.{ Module, SupportedVersion, Version }
+import io.scalac.core.model.{Module, SupportedVersion, Version}
 import io.scalac.core.support.ModulesSupport
 import io.scalac.core.util.ModuleInfo
 import io.scalac.core.util.ModuleInfo.Modules
 import io.scalac.extension.config.ClusterMonitoringConfig
 import io.scalac.extension.http.CleanableRequestStorage
 import io.scalac.extension.model._
-import io.scalac.extension.persistence.{ CleanablePersistingStorage, CleanableRecoveryStorage }
+import io.scalac.extension.persistence.{CleanablePersistingStorage, CleanableRecoveryStorage}
 import io.scalac.extension.service.CommonRegexPathService
-import io.scalac.extension.upstream.{
-  OpenTelemetryClusterMetricsMonitor,
-  OpenTelemetryHttpMetricsMonitor,
-  OpenTelemetryPersistenceMetricMonitor
-}
+import io.scalac.extension.upstream.dummy.NoopPersistenceMetricsMonitor
+import io.scalac.extension.upstream.{OpenTelemetryClusterMetricsMonitor, OpenTelemetryHttpMetricsMonitor, OpenTelemetryPersistenceMetricMonitor}
 
 import java.net.URI
 import java.util.Collections
@@ -201,7 +198,8 @@ class AkkaMonitoring(private val system: ActorSystem[_], val config: ClusterMoni
   def startPersistenceMonitoring(): Unit = {
     log.debug("Starting PersistenceEventsListener")
 
-    val openTelemetryPersistenceMonitor = OpenTelemetryPersistenceMetricMonitor(instrumentationName, actorSystemConfig)
+//    val openTelemetryPersistenceMonitor = OpenTelemetryPersistenceMetricMonitor(instrumentationName, actorSystemConfig)
+    val dummyMonitor = new NoopPersistenceMetricsMonitor()
     system.systemActorOf(
       Behaviors
         .supervise(
@@ -215,7 +213,7 @@ class AkkaMonitoring(private val system: ActorSystem[_], val config: ClusterMoni
                     CommonRegexPathService,
                     rs,
                     ps,
-                    openTelemetryPersistenceMonitor,
+                    dummyMonitor,
                     nodeName
                   )
                 }
