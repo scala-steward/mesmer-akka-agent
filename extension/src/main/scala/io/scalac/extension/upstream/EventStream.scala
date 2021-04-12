@@ -28,12 +28,17 @@ trait EventStream[-T] {
   def push(event: T): Future[Unit]
 }
 
+/**
+ * I'm confused with this class. I can't see if it is used anywhere.
+ */
 class NewRelicEventStream(val config: NewRelicConfig)(implicit
   val system: ActorSystem
 ) extends EventStream[Event] {
+  // That's tricky :)
   import config._
   import system.dispatcher
 
+  // @TODO hard-coded url which is duplicated few lines later
   private val newRelicUri = Uri(
     s"https://insights-collector.eu01.nr-data.net/v1/accounts/$accountId/events"
   )
@@ -52,6 +57,7 @@ class NewRelicEventStream(val config: NewRelicConfig)(implicit
 
   private lazy val newRelicQueue = {
 
+    // no timeouts set
     val connection = Http()
       .outgoingConnectionHttps("insights-collector.eu01.nr-data.net")
 

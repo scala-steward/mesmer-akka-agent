@@ -33,6 +33,12 @@ import io.scalac.core.event.StreamEvent.StreamInterpreterStats
 import io.scalac.core.event.TagEvent
 import io.scalac.core.util.TestCase.CommonMonitorTestFactory
 
+/*
+ * @TODO(priority=medium)
+ * This test is totally not readable for me. It's really hard to follow what happens here. Setup is pretty long and
+ * it's mixed with code of the real test. Tests methods test definitely more that one thing and it's not that obvious
+ * to determinate where are the parts from 'given/when/then' pattern.
+ */
 class AkkaStreamAgentTest
     extends InstallAgent
     with AnyFlatSpecLike

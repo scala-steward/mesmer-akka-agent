@@ -2,21 +2,19 @@ package io.scalac.extension
 
 import java.lang.invoke.MethodHandles
 import java.util.concurrent.atomic.AtomicReference
-
 import akka.actor.typed._
 import akka.actor.typed.receptionist.Receptionist.Register
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.scaladsl.TimerScheduler
-import akka.{ actor => classic }
+import akka.{actor => classic}
 import org.slf4j.LoggerFactory
 
 import scala.annotation.tailrec
 import scala.collection.immutable
 import scala.collection.mutable
 import scala.concurrent.duration._
-
 import io.scalac.core._
 import io.scalac.core.actor.ActorCellDecorator
 import io.scalac.core.actor.ActorMetricStorage

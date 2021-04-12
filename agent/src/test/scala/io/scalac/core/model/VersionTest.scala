@@ -3,6 +3,9 @@ package io.scalac.core.model
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+/**
+ * There are many tests in agent module which test code from core
+ */
 class VersionTest extends AnyFlatSpec with Matchers {
 
   "Version" should "split string to major minor and path" in {

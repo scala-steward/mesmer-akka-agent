@@ -2,6 +2,7 @@ package io.scalac.core.util
 
 import io.scalac.core.util.TimeSeries.LongTimeSeries
 
+// @TODO (priority=important) Percentiles are missing. At least: p999, p99, p90, p75
 sealed trait AggMetric[@specialized(Long) T, @specialized(Long) Avg] {
   def min: T
   def max: T
@@ -17,6 +18,8 @@ object AggMetric {
     def combine(timeSeries: LongTimeSeries): LongValueAggMetric = {
       val count = this.count + timeSeries.count
       val sum   = this.sum + timeSeries.sum
+
+      // @todo this is pretty important logic. I can't see test for it
       val avg   = if (count == 0) 0L else Math.floorDiv(sum, count)
       LongValueAggMetric(
         min = if (this.min < timeSeries.min) this.min else timeSeries.min,

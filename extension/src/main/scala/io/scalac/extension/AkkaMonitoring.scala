@@ -112,6 +112,10 @@ object AkkaMonitoring extends ExtensionId[AkkaMonitoring] {
     }
   }
 
+  /**
+   * @TODO if I understand correctly this method creates client for OpenTelemetry. We should set connection and read
+   * timeouts here
+   */
   private def startNewRelicBackend(region: String, apiKey: String, serviceName: String): Unit = {
     val newRelicExporterBuilder = NewRelicMetricExporter
       .newBuilder()
@@ -121,6 +125,7 @@ object AkkaMonitoring extends ExtensionId[AkkaMonitoring] {
     val newRelicExporter =
       if (region == "eu") {
         newRelicExporterBuilder
+          // @TODO hard-coded uris
           .uriOverride(URI.create("https://metric-api.eu.newrelic.com/metric/v1"))
           .build()
       } else {

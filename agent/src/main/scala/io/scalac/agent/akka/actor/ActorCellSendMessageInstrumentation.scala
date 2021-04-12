@@ -19,6 +19,11 @@ object ActorCellSendMessageInstrumentation {
           cell <- ActorRefOps.Local.cell(sender)
           spy  <- ActorCellDecorator.get(cell)
         } spy.sentMessages.inc()
+
+      /**
+       * @todo I don't like here that this module depends on core. Please consider making it as a non-dependency module
+       *       with well defined interface with an adapter defined in a main module (connecting agent and extension).
+       */
     }
 
 }

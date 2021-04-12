@@ -6,6 +6,10 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.util.Random
 
+/**
+ * @Todo it might be a matter of taste but in this case is way better to test against specified values, not generated
+ * ones. It is pretty hard to determine what we're testing (especially in the last last).
+ */
 class SupportedVersionTest extends AnyFlatSpec with Matchers with Inspectors {
 
   def randomVersion: Version = {
@@ -23,6 +27,20 @@ class SupportedVersionTest extends AnyFlatSpec with Matchers with Inspectors {
     forAll(versions.map(sut.supports))(_ shouldBe (true))
   }
 
+  /**
+   * @TODO it could be refactored to something like this:
+   *
+   * "SupportedVersion" should "support specified version" in {
+   *    SupportedVersion(List(Version("1.1.1"))).supports(Version("1.1.1")) shouldBe true
+   * }
+   *
+   * it should "not support unspecified version" in {
+   *   SupportedVersion(List(Version("1.1.2"))).supports(Version("1.1.1")) shouldBe false
+   * }
+   *
+   * in this case using generated property testing makes test harder to read and I can't see any gain
+   *
+   */
   it should "support any specified version" in {
     val (supportedVersions, notSupported) = List
       .tabulate(10)(_ + 1)

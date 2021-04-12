@@ -17,6 +17,9 @@ import scala.concurrent.Future
 
 import io.scalac.agent.util.FunctionOps._
 
+/**
+ * @TODO is this used anywhere?
+ */
 class RouteInstrumentation
 object RouteInstrumentation {
 
@@ -40,6 +43,7 @@ object RouteInstrumentation {
       .invoke(
         self,
         route.latency(millis => println(s"Request took ${millis} millis"))(
+          // @TODO(priority=low) the same execution context is used for IO and for route processing
           executionContext
         ),
         routingSettings,

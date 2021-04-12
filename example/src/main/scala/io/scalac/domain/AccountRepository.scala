@@ -2,6 +2,9 @@ package io.scalac.domain
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
+/**
+ * @TODO is this used anywhere?
+ */
 trait AccountRepository {
   def getAccount(id: AccountId): Future[Option[Account]]
   def getOrCreateAccount(id: AccountId, defaultBalance: Double = 0.0)(implicit

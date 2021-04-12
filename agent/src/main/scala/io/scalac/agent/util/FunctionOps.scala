@@ -7,6 +7,9 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.util.Success
 
+/**
+ * @TODO missing test
+ */
 trait FunctionOps {
 
   private[FunctionOps] val ignore: Any => Unit = Function.const(())

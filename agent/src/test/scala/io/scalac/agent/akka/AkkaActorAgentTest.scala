@@ -63,10 +63,17 @@ class AkkaActorAgentTest
       val n       = 3
       val waiting = n - 1
       actor ! "idle"
+
+      // @todo loop for 2 iterations? :)
       for (_ <- 0 until waiting) actor ! "42"
       eventually {
         val metrics = ActorCellDecorator.get(ctx).flatMap(_.mailboxTimeAgg.metrics).value
         metrics.count should be(n)
+
+        /**
+         * @todo this one is a classic anti-pattern for tests, you are coping production code by calculating everything
+         *       instead of just comparing to precalculated values
+         */
         metrics.avg should be(((waiting * idle.toMillis) / n) +- tolerance)
         metrics.sum should be((waiting * idle.toMillis) +- tolerance)
         metrics.min should be(0L +- tolerance)
@@ -75,6 +82,9 @@ class AkkaActorAgentTest
     }
   }
 
+  /**
+   * @todo what is this test for? Does it test ClassicStashActor? It is defined in the same file
+   */
   it should "record stash operation from actors beginning" in {
     val stashActor      = system.classicSystem.actorOf(ClassicStashActor.props(), createUniqueId)
     val inspectionProbe = createTestProbe[StashSize]
@@ -87,6 +97,8 @@ class AkkaActorAgentTest
       inspectionProbe.expectMessage(StashSize(Some(size)))
     }
 
+    // @todo To test counting you only need to send two events and check if counter increases. Testing for Open and
+    //  Close state should be done in separate test method.
     sendMessage(StashMessageCount)
     expectStashSize(StashMessageCount)
     sendMessage(StashMessageCount)
@@ -286,6 +298,7 @@ class AkkaActorAgentTest
   it should "record the amount of sent messages properly in typed akka" in testWithContextAndActor[String] { ctx =>
     val receiver = ctx.spawn(
       Behaviors.receiveMessage[String] { msg =>
+        // @todo println?
         println(msg)
         Behaviors.same
       },
@@ -297,6 +310,7 @@ class AkkaActorAgentTest
     }
   } { (ctx, sender) =>
     val sent = createCounterChecker(ctx, _.sentMessages)
+    // @todo it should be part of the test name
     // Disclaimer: always 0 because isn't possible to fetch the sender of a message
     // Ref: https://doc.akka.io/docs/akka/current/typed/from-classic.html#sender
     sender ! "forward"

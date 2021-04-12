@@ -80,3 +80,24 @@ See [overview](https://github.com/ScalaConsultants/mesmer-akka-agent/blob/main/e
 # Local testing
 
 `example` subproject contains a test application that uses Akka Cluster sharding with Mesmer Akka Agent extension. Go [here](example/README.md) for more information.
+
+# General remarks
+
+In general, I liked code and I wouldn't complain if I had to work on it. However, there are some issues I found: 
+
+* Many tests are written in a bad way. I pointed few things in the code but in general those are repeated issues for many tests:
+    * They are hard to read (consider using /given/when/then pattern)
+    * They are overcomplicated with long setup (consider creating builders to simplify /given part)
+    * It's hard to guess intent of the test because many generators are used so I cannot check quicly what the expected 
+      value should be
+      
+* Core module seems to be an anti-pattern (as a base for each module). As I commented in the code, it might be good to 
+  consider making agent module dependence-free to reduce coupling
+  
+* There's a lot of code which seems to be not in use. You might want to scan codebase for it
+
+* I'm not sure if I read code correctly but I cannot see timeouts set for telemetry client
+
+* I don't like packaging, especially in extension module. Examples:
+    * `io.scalac.core.actor` is duplicated
+    * util/model/services packages suggest that you place classes based by classes function, not by theirs subdomains 
