@@ -21,8 +21,8 @@ inThisBuild(
   )
 )
 
-addCommandAlias("formatAll", "scalafmtAll;scalafixAll")
-addCommandAlias("checkAll", "scalafixAll --check;scalafmtCheckAll")
+addCommandAlias("formatAll", "scalafmtAll; scalafixAll")
+addCommandAlias("checkAll", "scalafixAll --check; scalafmtCheckAll")
 
 lazy val all = (project in file("."))
   .disablePlugins(sbtassembly.AssemblyPlugin)
